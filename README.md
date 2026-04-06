@@ -10,60 +10,72 @@
 
 > “你不是在花钱，你是在每天亏钱。”
 
-大额消费从不是“一次性”的。**Trackify** 是一款极致简洁、充满 Apple 质感的个人资产追踪 Web App。它帮助你直面高净值物品（如 iPhone、MacBook、相机等）的真实成本，通过**「每日真实成本 = 购入价格 ÷ 使用天数」**的核心逻辑，将巨额消费摊销转化为每天的真实花销，让你不再盲目购物，建立真正理性的消费观。
+**Trackify** 是一款极致简洁、充满 Apple 质感的个人资产追踪 Web App。它帮助用户直面高净值物品（如 iPhone、MacBook、相机等）的真实成本，通过**「每日真实成本 = 购入价格 ÷ 使用天数」**的核心逻辑，将一次性大额消费转化为每天的真实花销，帮助建立更理性的消费观。
 
-> 🤖 **本项目完全由 Google Antigravity AI 编程助手自动完成开发**
+> 🤖 **本项目由 Google Antigravity AI 编程助手自动完成开发**
 > - **使用模型**：Gemini 3.1 Pro (High) · Claude Sonnet 4.6 (Thinking)
 
+---
+
+## ✨ 核心特性
+
+- **Apple 风格设计**：采用极简主义设计，提供流畅的交互体验。
+- **每日感官化成本**：自动计算并展示资产的每日摊销成本。
+- **多语言支持**：内置简体中文、繁体中文、英文、日文支持（登录前可见）。
+- **隐私与安全**：基于 Supabase 的 GitHub OAuth 登录，利用行级安全策略 (RLS) 确保用户数据物理隔离。
+- **社交分享**：支持将资产卡片一键生成图片。
+
+## 🛠 技术栈
+
+- **前端**：React 18, Vite, Tailwind CSS
+- **后端**：Supabase (Database, Auth, RLS)
+- **其他**：Lucide React (Icons), html2canvas (Image Generation)
+
+## 🚀 快速开始
+
+1. **克隆项目**
+   ```bash
+   git clone https://github.com/Chenming00/Trackify.git
+   cd Trackify
+   npm install
+   ```
+
+2. **环境变量**
+   在根目录下创建 `.env.local`：
+   ```env
+   VITE_SUPABASE_URL=你的项目URL
+   VITE_SUPABASE_ANON_KEY=你的Anon_Key
+   ```
+
+3. **数据库配置**
+   在 Supabase SQL Editor 中运行：
+   ```sql
+   CREATE TABLE assets (
+     id uuid default uuid_generate_v4() primary key,
+     user_id uuid references auth.users not null,
+     name text not null,
+     price numeric not null,
+     start_date date not null,
+     image_url text,
+     status text default 'using'
+   );
+   ALTER TABLE assets ENABLE ROW LEVEL SECURITY;
+   -- 配置 RLS 策略 (详见文档)
+   ```
+
+4. **运行**
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## ✨ 核心亮点
+## 📝 更新日志
 
-### 🎨 现象级 UI 与营销落地页
-* **高转化全屏落地页 (Premium Landing)**：彻底告别简陋设计。采用深色态玻璃拟物 (Glassmorphism) 导航条、律动光影渐变 Hero 区域以及悬浮 3D 悬浮卡片演示，提供具有极强张力的视觉冲击。
-* **数字微动效 (Micro-interactions)**：引入即时数字脉动（Ticker）效果，每日亏损情况实时滚动，强化痛点体验。
-* **移动端优先管理域**：从密集的卡片瀑布流，到从底部弹出的 iOS Sheet 滑动表单，操作体验极其接近原生 Apple 生态应用。
-
-### 🌐 国际化引流与沉浸式中后台
-* **极速多语言引流 (i18n)**：预置简体中文、繁体中文、英文、日文支持。提供 Apple 胶囊式语言无缝切换，以极具侵略性的多语言营销词占领全球心智。
-* **沉浸式的内部环境**：多语言系统专为未登录拉新访客设计，只需 GitHub 一键授权登录后，系统自动提供稳定、沉浸的全中文资产管理后台，排除任何额外干扰。
-
-### 🔐 绝对隔离的无账密安全
-* **无密码登录模式**：拒绝被拖库、无需记忆密码。全站仅支持极其高效的 GitHub OAuth 第三方最高级令牌授权。
-* **军武数据防线 (RLS)**：采用下一代架构 Supabase，直接将数据物理隔离下沉至数据库层。强力校验 Row Level Security（行级锁），绝无越权漏洞。
-
-### 🚀 增长与社交传播能力
-* **精致社交卡片 (Social Badge)**：一键将自己的资产痛点海报化。后台急速云端（亦或是极速 DOM 帧捕获）渲染 4:3 黄金比例海报。附带引流入口 (trackify.ming.fi)，在朋友圈、小红书与 Twitter 随手引发裂变。
-
----
-
-## 🛠 技术底座
-
-* **前端框架**：React 18 + Vite (极速冷热更新)
-* **样式原子引擎**：Tailwind CSS v3 + 纯手写光影扩展
-* **BAAS (后端即服务)**：Supabase (PostgreSQL 强一致性底座 + Supabase Auth + RESTful)
-* **社交传播引擎**：`html2canvas` 级 DOM 像素重组
-* **自动化 DevOps**：Vercel CD
-
----
-
-## 🚀 私有化部署指南
-
-### 1. 克隆 & 安装
-```bash
-git clone https://github.com/Chenming00/Trackify.git
-cd Trackify
-npm install
-```
-
-### 2. 构建核心数据总线与安全策略
-前往你的 Supabase 平台并新建项目。进入 **Authentication -> Providers** 开启 **GitHub Login**。
-然后在 **SQL Editor** 执行如下结构化建表与权限控制：
-
-```sql
--- ① 创建包含归属主 (user_id) 的通用资产核心表
-CREATE TABLE assets (
+- **v0.2.0**: 重构落地页设计，优化营销词，添加多语言支持及条款/隐私页面。
+- **v0.1.0**: 接入 Supabase RLS，实现用户数据物理隔离。
+- **v0.0.1**: 项目初始化，核心计算公式与基础视图。
+EATE TABLE assets (
   id uuid default uuid_generate_v4() primary key,
   user_id uuid references auth.users not null,
   name text not null,

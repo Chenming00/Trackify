@@ -57,7 +57,7 @@ const FEAT_ICONS = [
   <Lock size={24} />,
 ];
 
-export default function LandingPage() {
+export default function LandingPage({ onNavigate }) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -375,7 +375,12 @@ export default function LandingPage() {
           </p>
 
           <div className="flex items-center gap-4 text-slate-500 text-xs font-medium">
-            <span>{t('footer_legal')}</span>
+            <button onClick={() => onNavigate('terms')} className="hover:text-emerald-400 transition-colors">
+              使用条款
+            </button>
+            <button onClick={() => onNavigate('privacy')} className="hover:text-emerald-400 transition-colors">
+              隐私政策
+            </button>
             <span>© {new Date().getFullYear()}</span>
           </div>
         </div>

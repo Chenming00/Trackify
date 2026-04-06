@@ -5,6 +5,8 @@ import AssetListItem from './components/AssetListItem';
 import AssetFormModal from './components/AssetFormModal';
 import ShareModal from './components/ShareModal';
 import LandingPage from './components/LandingPage';
+import Terms from './components/Terms';
+import Privacy from './components/Privacy';
 import Logo from './components/Logo';
 import { Plus, LayoutGrid, List, LogOut } from 'lucide-react';
 import { useTranslation, I18nContext, dictionaries } from './i18n';
@@ -17,6 +19,7 @@ export default function App() {
   const [viewMode, setViewMode] = useState('list');
   const [formModal, setFormModal] = useState({ open: false, asset: null });
   const [shareModal, setShareModal] = useState({ open: false, asset: null });
+  const [view, setView] = useState('main'); // 'main', 'terms', 'privacy'
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -68,8 +71,16 @@ export default function App() {
     await supabase.auth.signOut();
   };
 
+  if (view === 'terms') {
+    return <Terms onBack={() => setView('main')} />;
+  }
+
+  if (view === 'privacy') {
+    return <Privacy onBack={() => setView('main')} />;
+  }
+
   if (!session) {
-    return <LandingPage />;
+    return <LandingPage onNavigate={setView} />;
   }
 
   const forcedZhT = (key) => dictionaries['zh-CN']?.[key] || key;
@@ -211,6 +222,14 @@ export default function App() {
         user={session.user}
       />
         <ShareModal isOpen={shareModal.open} onClose={() => setShareModal({ open: false, asset: null })} asset={shareModal.asset} />
+        
+        <footer className="mt-12 pb-12 text-center text-[10px] text-slate-300 font-medium">
+          <div className="flex justify-center gap-4 mb-2">
+            <button onClick={() => setView('terms')} className="hover:text-slate-400 transition-colors">使用条款</button>
+            <button onClick={() => setView('privacy')} className="hover:text-slate-400 transition-colors">隐私政策</button>
+          </div>
+          <p>TRACKIFY © {new Date().getFullYear()}</p>
+        </footer>
       </div>
     </I18nContext.Provider>
   );
