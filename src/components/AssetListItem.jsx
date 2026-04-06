@@ -1,5 +1,6 @@
 import React from 'react';
 import { Share2, MoreHorizontal } from 'lucide-react';
+import { useTranslation } from '../i18n';
 
 const STATUS_DOT = {
   using:   'bg-emerald-400',
@@ -8,6 +9,7 @@ const STATUS_DOT = {
 };
 
 export default function AssetListItem({ asset, onEdit, onShare }) {
+  const { t } = useTranslation();
   const { name, price, start_date, image_url, status } = asset;
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
@@ -29,14 +31,14 @@ export default function AssetListItem({ asset, onEdit, onShare }) {
           <h3 className="text-sm font-semibold text-slate-800 truncate">{name}</h3>
         </div>
         <p className="text-xs text-slate-400 mt-0.5">
-          ¥{Number(price).toLocaleString()} · {days}天
+          ¥{Number(price).toLocaleString()} · {days}{t('days')}
         </p>
       </div>
 
       {/* Cost per day — primary info */}
       <div className="flex-shrink-0 text-right">
         <p className="text-sm font-bold text-emerald-600">¥{costPerDay}</p>
-        <p className="text-[10px] text-slate-400">/天</p>
+        <p className="text-[10px] text-slate-400">{t('per_day')}</p>
       </div>
 
       {/* Actions */}

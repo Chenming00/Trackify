@@ -4,7 +4,7 @@ import React, { forwardRef } from 'react';
  * ShareCard — off-screen DOM captured by html2canvas.
  * All inline styles for reliable capture.
  */
-const ShareCard = forwardRef(function ShareCard({ asset }, ref) {
+const ShareCard = forwardRef(function ShareCard({ asset, t = (key) => ({ days_used: '已使用', daily_cost: '每日成本' }[key] || key) }, ref) {
   const { name, price, start_date, image_url, status } = asset;
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
@@ -84,7 +84,7 @@ const ShareCard = forwardRef(function ShareCard({ asset }, ref) {
             textAlign: 'center', border: '1px solid #f1f5f9',
           }}>
             <div style={{ fontSize: '28px', fontWeight: 800, color: '#1e293b', lineHeight: 1 }}>{days}</div>
-            <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '6px', fontWeight: 600, letterSpacing: '0.05em' }}>使用天数</div>
+            <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '6px', fontWeight: 600, letterSpacing: '0.05em' }}>{t('days_used')}</div>
           </div>
           {/* Cost per day — HERO */}
           <div style={{
@@ -95,7 +95,7 @@ const ShareCard = forwardRef(function ShareCard({ asset }, ref) {
             <div style={{ fontSize: '32px', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
               ¥{costPerDay}
             </div>
-            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.75)', marginTop: '6px', fontWeight: 600, letterSpacing: '0.05em' }}>每日成本</div>
+            <div style={{ fontSize: '10px', color: 'rgba(255,255,255,0.75)', marginTop: '6px', fontWeight: 600, letterSpacing: '0.05em' }}>{t('daily_cost')}</div>
           </div>
         </div>
 

@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../supabase';
 import { X, Trash2 } from 'lucide-react';
-
-const STATUS_OPTIONS = [
-  { value: 'using',   label: '使用中' },
-  { value: 'retired', label: '闲置中' },
-  { value: 'sold',    label: '已卖出' },
-];
+import { useTranslation } from '../i18n';
 
 const EMPTY_FORM = {
   name: '',
@@ -17,6 +12,7 @@ const EMPTY_FORM = {
 };
 
 export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, editAsset, user }) {
+  const { t } = useTranslation();
   const isEdit = Boolean(editAsset);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,8 +33,6 @@ export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, ed
   }, [editAsset, isOpen]);
 
   if (!isOpen) return null;
-
-  const set = (key) => (e) => setFormData((prev) => ({ ...prev, [key]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -61,32 +55,30 @@ export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, ed
         onSaved(data[0], 'insert');
       }
       onClose();
-    } catch (err) {
-      console.error('Save error:', err);
-      alert('保存失败');
+    } catch (error) {
+      console.error('Error saving asset:', error);
+      alert(t('err_save'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm(`确定删除「${editAsset.name}」吗？`)) return;
-    setIsDeleting(true);
-    try {
-      const { error } = await supabase.from('assets').delete().eq('id', editAsset.id);
-      if (error) throw error;
-      onDeleted(editAsset.id);
-      onClose();
-    } catch (err) {
-      console.error('Delete error:', err);
-      alert('删除失败');
-    } finally {
-      setIsDeleting(false);
+    if (isEdit && window.confirm(t('confirm_del'))) {
+      setIsDeleting(true);
+      try {
+        const { error } = await supabase.from('assets').delete().eq('id', editAsset.id);
+        if (error) throw error;
+        onDeleted(editAsset.id);
+        onClose();
+      } catch (error) {
+        console.error('Error deleting:', error);
+        alert(t('err_del'));
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
-
-  const inputClass =
-    'w-full px-4 py-3 rounded-xl bg-slate-100 border-0 text-[15px] text-slate-800 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-emerald-500/30 outline-none transition-all';
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
@@ -94,87 +86,106 @@ export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, ed
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
       {/* Sheet — slides up on mobile, centered on tablet+ */}
-      <div className="relative bg-white w-full sm:max-w-md sm:rounded-3xl rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto">
-        {/* iOS-style drag handle */}
-        <div className="flex justify-center pt-3 pb-1 sm:hidden">
-          <div className="w-10 h-1 rounded-full bg-slate-300" />
-        </div>
-
-        {/* Header */}
-        <div className="px-6 pt-4 pb-3 flex justify-between items-center">
-          <h2 className="text-lg font-bold text-slate-800">{isEdit ? '编辑资产' : '新增资产'}</h2>
+      <div className="bg-white/80 backdrop-blur-xl w-full sm:max-w-md mt-auto sm:mt-0 sm:rounded-3xl rounded-t-[2.5rem] p-6 shadow-[0_-8px_30px_rgb(0,0,0,0.08)] sm:shadow-2xl border-t border-slate-100 sm:border animate-in slide-in-from-bottom-full sm:slide-in-from-bottom-10 fade-in duration-300">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-slate-800 tracking-tight">{isEdit ? t('edit_title') : t('add_title')}</h2>
           <button onClick={onClose} className="p-2 -mr-2 text-slate-400 hover:text-slate-600 rounded-full transition-colors">
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="px-6 pb-8 space-y-5">
-          {/* Name */}
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1.5 ml-1 uppercase tracking-wide">资产名称</label>
-            <input required type="text" placeholder="MacBook Pro 16&quot;" className={inputClass} value={formData.name} onChange={set('name')} />
+            <label className="block text-xs font-bold text-slate-600 mb-1.5 ml-1">{t('form_name')}</label>
+            <input
+              required
+              type="text"
+              className="w-full px-4 py-3 bg-slate-100/50 border-0 text-slate-900 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:bg-white placeholder:text-slate-400 font-medium transition-all outline-none text-sm"
+              placeholder="MacBook Pro 16"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            />
           </div>
 
-          {/* Price */}
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1.5 ml-1 uppercase tracking-wide">购入价格 (¥)</label>
-            <input required type="number" step="0.01" min="0" placeholder="9999" className={inputClass} value={formData.price} onChange={set('price')} />
+            <label className="block text-xs font-bold text-slate-600 mb-1.5 ml-1">{t('form_price')}</label>
+            <input
+              required
+              type="number"
+              min="0"
+              step="0.01"
+              className="w-full px-4 py-3 bg-slate-100/50 border-0 text-slate-900 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:bg-white placeholder:text-slate-400 font-medium transition-all outline-none text-sm"
+              value={formData.price}
+              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+            />
           </div>
 
-          {/* Date */}
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1.5 ml-1 uppercase tracking-wide">开始使用日期</label>
-            <input required type="date" className={`${inputClass} text-slate-700`} value={formData.start_date} onChange={set('start_date')} />
+            <label className="block text-xs font-bold text-slate-600 mb-1.5 ml-1">{t('form_date')}</label>
+            <input
+              required
+              type="date"
+              className="w-full px-4 py-3 bg-slate-100/50 border-0 text-slate-900 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:bg-white text-sm font-medium transition-all outline-none"
+              value={formData.start_date}
+              onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+            />
           </div>
 
-          {/* Image URL */}
           <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-1.5 ml-1 uppercase tracking-wide">图片链接 <span className="text-slate-400 normal-case">(可选)</span></label>
-            <input type="url" placeholder="https://..." className={inputClass} value={formData.image_url} onChange={set('image_url')} />
+            <label className="block text-xs font-bold text-slate-600 mb-1.5 ml-1">
+              {t('form_img')} <span className="font-normal text-slate-400">{t('form_img_opt')}</span>
+            </label>
+            <input
+              type="url"
+              className="w-full px-4 py-3 bg-slate-100/50 border-0 text-slate-900 rounded-2xl focus:ring-2 focus:ring-emerald-500 focus:bg-white placeholder:text-slate-400 font-medium transition-all outline-none text-sm"
+              placeholder="https://..."
+              value={formData.image_url}
+              onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
+            />
           </div>
 
-          {/* Status — iOS segmented control */}
-          <div>
-            <label className="block text-xs font-semibold text-slate-500 mb-2 ml-1 uppercase tracking-wide">状态</label>
-            <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
-              {STATUS_OPTIONS.map((opt) => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => setFormData((p) => ({ ...p, status: opt.value }))}
-                  className={`flex-1 py-2 rounded-lg text-[13px] font-semibold transition-all ${
-                    formData.status === opt.value
-                      ? 'bg-white text-slate-800 shadow-sm'
-                      : 'text-slate-400 hover:text-slate-500'
-                  }`}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Save */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3.5 rounded-xl active:scale-[0.98] transition-all shadow-md disabled:opacity-60"
-          >
-            {isSubmitting ? '保存中...' : isEdit ? '保存修改' : '确认添加'}
-          </button>
-
-          {/* Delete */}
           {isEdit && (
-            <button
-              type="button"
-              disabled={isDeleting}
-              onClick={handleDelete}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 active:scale-[0.98] transition-all disabled:opacity-60"
-            >
-              <Trash2 size={15} />
-              {isDeleting ? '删除中...' : '删除此资产'}
-            </button>
+            <div>
+              <label className="block text-xs font-bold text-slate-600 mb-1.5 ml-1">{t('form_status')}</label>
+              <div className="flex bg-slate-100/50 p-1.5 rounded-2xl">
+                {['using', 'retired', 'sold'].map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, status })}
+                    className={`flex-1 py-2 text-xs font-bold rounded-xl transition-all ${
+                      formData.status === status
+                        ? 'bg-white text-emerald-600 shadow-sm'
+                        : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    {t(`status_${status}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
+
+          <div className="pt-2 flex gap-3">
+            {isEdit && (
+              <button
+                type="button"
+                onClick={handleDelete}
+                disabled={isDeleting || isSubmitting}
+                className="flex justify-center items-center p-3.5 bg-red-50 text-red-500 rounded-2xl hover:bg-red-100 active:scale-95 transition-all outline-none disabled:opacity-50"
+                title={t('delete_btn')}
+              >
+                <Trash2 size={20} />
+              </button>
+            )}
+              <button
+                type="submit"
+                disabled={isSubmitting || isDeleting}
+                className="flex-1 bg-slate-900 hover:bg-black text-white font-semibold py-3.5 rounded-2xl shadow-md active:scale-95 transition-all outline-none disabled:opacity-70 disabled:scale-100 text-[15px]"
+              >
+                {isSubmitting ? t('saving') : isEdit ? t('save_edit') : t('save_add')}
+              </button>
+            </div>
         </form>
       </div>
     </div>
