@@ -19,7 +19,7 @@ export default function App() {
         .from('assets')
         .select('*')
         .order('start_date', { ascending: false });
-        
+
       if (error) throw error;
       setAssets(data || []);
     } catch (error) {
@@ -37,26 +37,28 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-28 font-sans">
-      <div className="pt-12 px-5 max-w-2xl mx-auto">
-        <div className="mb-6">
-          <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
+      <div className="pt-10 px-4 sm:px-6 max-w-2xl mx-auto">
+
+        {/* Header */}
+        <div className="mb-5">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
           <p className="text-slate-400 text-sm mt-1">追踪你的每一笔投入</p>
         </div>
 
-        {/* Top Green Card */}
-        <div className="bg-gradient-to-br from-emerald-400 to-green-600 rounded-[2rem] p-7 shadow-[0_12px_40px_-10px_rgba(16,185,129,0.5)] text-white mb-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-40 h-40 transform rotate-12 translate-x-10 -translate-y-6">
+        {/* Total Value Card */}
+        <div className="bg-gradient-to-br from-emerald-400 to-green-600 rounded-[1.75rem] p-6 sm:p-7 shadow-[0_12px_40px_-10px_rgba(16,185,129,0.5)] text-white mb-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-6 opacity-10 pointer-events-none">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-32 h-32 sm:w-40 sm:h-40 transform rotate-12 translate-x-8 -translate-y-4">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
           <div className="relative z-10">
-            <p className="text-emerald-50/90 font-medium mb-1.5 text-sm tracking-wide">资产总值 (¥)</p>
-            <h2 className="text-[2.75rem] leading-none font-bold tracking-tight">
+            <p className="text-emerald-50/90 font-medium mb-1.5 text-xs sm:text-sm tracking-wide uppercase">资产总值 (¥)</p>
+            <h2 className="text-3xl sm:text-4xl md:text-[2.75rem] leading-none font-bold tracking-tight break-words">
               {totalValue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </h2>
-            <div className="mt-8 flex items-center inline-flex">
-              <div className="bg-black/15 text-emerald-50 text-xs font-medium px-4 py-1.5 rounded-full backdrop-blur-md">
+            <div className="mt-6 sm:mt-8">
+              <div className="bg-black/15 text-emerald-50 text-xs font-medium px-4 py-1.5 rounded-full backdrop-blur-md inline-block">
                 共 {assets.length} 项在管资产
               </div>
             </div>
@@ -65,7 +67,7 @@ export default function App() {
 
         {/* Assets List */}
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-slate-800 mb-5 ml-1">资产列表</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-800 mb-4">资产列表</h2>
 
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-3">
@@ -73,7 +75,7 @@ export default function App() {
               <p className="text-slate-400 text-sm">加载中...</p>
             </div>
           ) : assets.length === 0 ? (
-            <div className="bg-white rounded-[1.5rem] border-2 border-dashed border-slate-200 p-12 text-center">
+            <div className="bg-white rounded-[1.5rem] border-2 border-dashed border-slate-200 p-10 text-center">
               <div className="text-5xl mb-4">📭</div>
               <p className="text-slate-500 font-semibold mb-1">还没有任何资产</p>
               <p className="text-slate-400 text-sm mb-6">点击右下角的按钮添加第一项</p>
@@ -85,7 +87,8 @@ export default function App() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4">
+            /* Mobile: 1 column, tablet+: 2 columns */
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {assets.map(asset => (
                 <AssetCard key={asset.id} asset={asset} />
               ))}
@@ -97,7 +100,7 @@ export default function App() {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="fixed bottom-8 right-6 z-40 bg-slate-900 text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center"
+        className="fixed bottom-6 right-6 z-40 bg-slate-900 text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center"
         aria-label="添加资产"
       >
         <Plus size={26} />
