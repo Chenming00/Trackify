@@ -1,5 +1,5 @@
 import React from 'react';
-import { MoreHorizontal, Share2 } from 'lucide-react';
+import { Share2, MoreHorizontal } from 'lucide-react';
 
 const STATUS_STYLE = {
   using:   { label: '使用中', bg: 'bg-emerald-100', text: 'text-emerald-700' },
@@ -12,71 +12,47 @@ export default function AssetCard({ asset, onEdit, onShare }) {
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
   const costPerDay = price / days;
-
   const s = STATUS_STYLE[status] || STATUS_STYLE.using;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-100/80 overflow-hidden">
-      {/* Vertical layout: image on top, info below */}
-      <div className="flex flex-col">
-
-        {/* Image — always full-width, fixed height */}
+      {/* Image — reduced height */}
+      <div className="relative">
         {image_url ? (
-          <img src={image_url} alt={name} className="w-full h-36 object-cover" />
+          <img src={image_url} alt={name} className="w-full h-24 object-cover" />
         ) : (
-          <div className="w-full h-28 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center">
-            <span className="text-4xl">📦</span>
+          <div className="w-full h-20 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center">
+            <span className="text-3xl">📦</span>
           </div>
         )}
+        {/* Action icons overlay */}
+        <div className="absolute top-1.5 right-1.5 flex gap-1">
+          <button onClick={(e) => { e.stopPropagation(); onShare(asset); }} className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-emerald-500 transition-colors">
+            <Share2 size={12} />
+          </button>
+          <button onClick={(e) => { e.stopPropagation(); onEdit(asset); }} className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-slate-700 transition-colors">
+            <MoreHorizontal size={12} />
+          </button>
+        </div>
+      </div>
 
-        {/* Content */}
-        <div className="p-4 flex flex-col gap-3">
+      {/* Content — compressed */}
+      <div className="p-3 space-y-2">
+        {/* Name + Status */}
+        <div className="flex items-center justify-between gap-1">
+          <h3 className="font-bold text-sm text-slate-800 truncate flex-1">{name}</h3>
+          <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${s.bg} ${s.text}`}>{s.label}</span>
+        </div>
 
-          {/* Row 1: Name + status + actions */}
-          <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-[15px] text-slate-800 leading-snug line-clamp-1">{name}</h3>
-            </div>
-            <span className={`flex-shrink-0 text-[10px] font-semibold px-2.5 py-1 rounded-full ${s.bg} ${s.text}`}>
-              {s.label}
-            </span>
-          </div>
+        {/* Price · Days — merged single line */}
+        <p className="text-xs text-slate-400">
+          ¥{Number(price).toLocaleString()} · {days}天
+        </p>
 
-          {/* Row 2: Price + Days — clean two-column */}
-          <div className="flex rounded-xl bg-slate-50 divide-x divide-slate-200/80">
-            <div className="flex-1 py-2.5 px-3 text-center">
-              <p className="text-[10px] text-slate-400 font-medium mb-0.5">购入价格</p>
-              <p className="text-sm font-bold text-slate-700">¥{Number(price).toLocaleString()}</p>
-            </div>
-            <div className="flex-1 py-2.5 px-3 text-center">
-              <p className="text-[10px] text-slate-400 font-medium mb-0.5">已使用</p>
-              <p className="text-sm font-bold text-slate-700">{days} <span className="text-xs font-medium text-slate-400">天</span></p>
-            </div>
-          </div>
-
-          {/* Row 3: Cost per day — HERO element */}
-          <div className="bg-emerald-50 rounded-xl px-4 py-3 flex items-center justify-between">
-            <span className="text-xs text-emerald-600 font-medium">每日成本</span>
-            <span className="text-lg font-extrabold text-emerald-600">¥{costPerDay.toFixed(2)}<span className="text-xs font-semibold ml-0.5 text-emerald-500">/天</span></span>
-          </div>
-
-          {/* Row 4: Action buttons */}
-          <div className="flex gap-2 pt-0.5">
-            <button
-              onClick={(e) => { e.stopPropagation(); onShare(asset); }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold text-slate-500 bg-slate-50 hover:bg-slate-100 active:scale-[0.98] transition-all"
-            >
-              <Share2 size={13} />
-              分享
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); onEdit(asset); }}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-semibold text-slate-500 bg-slate-50 hover:bg-slate-100 active:scale-[0.98] transition-all"
-            >
-              <MoreHorizontal size={13} />
-              编辑
-            </button>
-          </div>
+        {/* Cost per day — hero, single line */}
+        <div className="bg-emerald-50 rounded-lg px-3 py-2 flex items-center justify-between">
+          <span className="text-[10px] text-emerald-600 font-medium">每日成本</span>
+          <span className="text-base font-extrabold text-emerald-600">¥{costPerDay.toFixed(2)}<span className="text-[10px] font-semibold ml-0.5 text-emerald-500">/天</span></span>
         </div>
       </div>
     </div>
