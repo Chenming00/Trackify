@@ -4,20 +4,47 @@ import AssetCard from './components/AssetCard';
 import AssetListItem from './components/AssetListItem';
 import AssetFormModal from './components/AssetFormModal';
 import ShareModal from './components/ShareModal';
-import { Plus, LayoutGrid, List } from 'lucide-react';
+import Auth from './components/Auth';
+import { Plus, LayoutGrid, List, LogOut } from 'lucide-react';
 
 export default function App() {
+  const [session, setSession] = useState(null);
   const [assets, setAssets] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [viewMode, setViewMode] = useState('list'); // 'list' (compact) | 'grid' (cards)
+  const [viewMode, setViewMode] = useState('list');
   const [formModal, setFormModal] = useState({ open: false, asset: null });
   const [shareModal, setShareModal] = useState({ open: false, asset: null });
 
-  useEffect(() => { fetchAssets(); }, []);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (session) {
+      fetchAssets();
+    } else {
+      setAssets([]); // Clear assets on logout
+    }
+  }, [session]);
 
   const fetchAssets = async () => {
+    setIsLoading(true);
     try {
-      const { data, error } = await supabase.from('assets').select('*').order('start_date', { ascending: false });
+      const { data, error } = await supabase
+        .from('assets')
+        .select('*')
+        .eq('user_id', session.user.id) // Ensure we only get own assets (though RLS also handles this)
+        .order('start_date', { ascending: false });
       if (error) throw error;
       setAssets(data || []);
     } catch (error) {
@@ -34,9 +61,15 @@ export default function App() {
 
   const handleDeleted = (id) => setAssets((prev) => prev.filter((a) => a.id !== id));
 
-  const totalValue = assets.reduce((sum, a) => sum + Number(a.price), 0);
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
 
-  // Group by status
+  if (!session) {
+    return <Auth />;
+  }
+
+  const totalValue = assets.reduce((sum, a) => sum + Number(a.price), 0);
   const usingAssets = assets.filter((a) => a.status === 'using' || !a.status);
   const retiredAssets = assets.filter((a) => a.status === 'retired');
   const soldAssets = assets.filter((a) => a.status === 'sold');
@@ -62,7 +95,7 @@ export default function App() {
             {items.map(renderAsset)}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 mt-2">
             {items.map(renderAsset)}
           </div>
         )}
@@ -72,15 +105,20 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24 font-sans">
-      <div className="pt-10 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
+      <div className="pt-8 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
 
         {/* Header */}
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
-          <p className="text-slate-400 text-sm mt-0.5">追踪你的每一分投入</p>
+        <div className="flex justify-between items-start">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
+            <p className="text-slate-400 text-sm mt-0.5 max-w-[200px] truncate">{session.user.email}</p>
+          </div>
+          <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-slate-600 bg-white rounded-full shadow-sm border border-slate-100 transition-colors" title="退出登录">
+            <LogOut size={16} />
+          </button>
         </div>
 
-        {/* Total Value Card — slightly tighter */}
+        {/* Total Value Card */}
         <div className="bg-gradient-to-br from-emerald-400 to-green-600 rounded-2xl p-5 shadow-[0_8px_30px_-8px_rgba(16,185,129,0.45)] text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-28 h-28 transform rotate-12 translate-x-6 -translate-y-2">
@@ -136,7 +174,7 @@ export default function App() {
             </button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-5 pt-1">
             {renderGroup('使用中', usingAssets, true)}
             {renderGroup('闲置中', retiredAssets, true)}
             {renderGroup('已卖出', soldAssets, false)}
@@ -153,7 +191,14 @@ export default function App() {
         <Plus size={26} />
       </button>
 
-      <AssetFormModal isOpen={formModal.open} onClose={() => setFormModal({ open: false, asset: null })} editAsset={formModal.asset} onSaved={handleSaved} onDeleted={handleDeleted} />
+      <AssetFormModal 
+        isOpen={formModal.open} 
+        onClose={() => setFormModal({ open: false, asset: null })} 
+        editAsset={formModal.asset} 
+        onSaved={handleSaved} 
+        onDeleted={handleDeleted}
+        user={session.user}
+      />
       <ShareModal isOpen={shareModal.open} onClose={() => setShareModal({ open: false, asset: null })} asset={shareModal.asset} />
     </div>
   );

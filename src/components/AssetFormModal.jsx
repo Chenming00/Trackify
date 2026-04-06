@@ -16,7 +16,7 @@ const EMPTY_FORM = {
   status: 'using',
 };
 
-export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, editAsset }) {
+export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, editAsset, user }) {
   const isEdit = Boolean(editAsset);
   const [formData, setFormData] = useState(EMPTY_FORM);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,7 +56,7 @@ export default function AssetFormModal({ isOpen, onClose, onSaved, onDeleted, ed
         if (error) throw error;
         onSaved(data[0], 'update');
       } else {
-        const { data, error } = await supabase.from('assets').insert([payload]).select();
+        const { data, error } = await supabase.from('assets').insert([{ ...payload, user_id: user.id }]).select();
         if (error) throw error;
         onSaved(data[0], 'insert');
       }
