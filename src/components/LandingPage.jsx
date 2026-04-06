@@ -115,6 +115,15 @@ export default function LandingPage({ onNavigate }) {
 
           {/* Right */}
           <div className="flex items-center gap-3">
+            <a 
+              href="https://github.com/Chenming00/Trackify" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-400 hover:text-slate-800 transition-colors hidden sm:flex items-center mr-2"
+              title="Open Source on GitHub"
+            >
+              <Github size={20} />
+            </a>
             <LanguageSwitcher />
             <button
               onClick={handleGithubLogin}
@@ -183,6 +192,15 @@ export default function LandingPage({ onNavigate }) {
               )}
               {t('login_btn')}
             </button>
+            <a
+              href="https://github.com/Chenming00/Trackify"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold py-4 px-8 rounded-2xl shadow-sm active:scale-95 transition-all duration-300 text-[15px] w-full sm:w-auto"
+            >
+              <Github size={18} className="text-slate-700" />
+              开源仓库
+            </a>
           </div>
           <p className="text-slate-400 text-xs font-medium">{t('login_sub')}</p>
         </div>
@@ -375,6 +393,14 @@ export default function LandingPage({ onNavigate }) {
           </p>
 
           <div className="flex items-center gap-4 text-slate-500 text-xs font-medium">
+            <a 
+              href="https://github.com/Chenming00/Trackify" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hover:text-white transition-colors flex items-center gap-1 mr-2"
+            >
+              <Github size={14} /> Open Source
+            </a>
             <button onClick={() => onNavigate('terms')} className="hover:text-emerald-400 transition-colors">
               使用条款
             </button>
