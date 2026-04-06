@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const dictionaries = {
   'zh-CN': {
-    title: '资产管理',
+    title: 'Trackify · 资产追踪',
     subtitle: '追踪你的每一笔投入',
     hero_title1: '你不是在花钱',
     hero_title2: '你是在每天亏钱',
@@ -60,7 +60,7 @@ const dictionaries = {
     err_login: '登录失败，请重试',
   },
   'zh-TW': {
-    title: '資產管理',
+    title: 'Trackify · 資產追蹤',
     subtitle: '追蹤你的每一筆投入',
     hero_title1: '你不是在花錢',
     hero_title2: '你是在每天虧錢',
@@ -118,7 +118,7 @@ const dictionaries = {
     err_login: '登入失敗，請重試',
   },
   'en': {
-    title: 'Asset Management',
+    title: 'Trackify · Asset Tracker',
     subtitle: 'Track every investment',
     hero_title1: "You aren't just spending,",
     hero_title2: "You're losing money daily.",
@@ -176,7 +176,7 @@ const dictionaries = {
     err_login: 'Login failed, please try again',
   },
   'ja': {
-    title: '資産管理',
+    title: 'Trackify · 資産トラッカー',
     subtitle: 'すべての投資を追跡する',
     hero_title1: 'ただお金を使っているのではない',
     hero_title2: '毎日お金を失っているのだ',
@@ -254,7 +254,7 @@ export function I18nProvider({ children }) {
   useEffect(() => {
     localStorage.setItem('trackify_lang', lang);
     document.documentElement.lang = lang;
-    document.title = `${t('title')} | Trackify`;
+    document.title = t('title');
   }, [lang]);
 
   const t = (key) => dictionaries[lang]?.[key] || dictionaries['zh-CN'][key] || key;
