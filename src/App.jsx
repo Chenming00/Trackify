@@ -6,9 +6,8 @@ import AssetFormModal from './components/AssetFormModal';
 import ShareModal from './components/ShareModal';
 import LandingPage from './components/LandingPage';
 import Logo from './components/Logo';
-import LanguageSwitcher from './components/LanguageSwitcher';
 import { Plus, LayoutGrid, List, LogOut } from 'lucide-react';
-import { useTranslation } from './i18n';
+import { useTranslation, I18nContext, dictionaries } from './i18n';
 
 export default function App() {
   const { t } = useTranslation();
@@ -73,6 +72,8 @@ export default function App() {
     return <LandingPage />;
   }
 
+  const forcedZhT = (key) => dictionaries['zh-CN']?.[key] || key;
+
   const totalValue = assets.reduce((sum, a) => sum + Number(a.price), 0);
   const usingAssets = assets.filter((a) => a.status === 'using' || !a.status);
   const retiredAssets = assets.filter((a) => a.status === 'retired');
@@ -108,7 +109,8 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-24 font-sans">
+    <I18nContext.Provider value={{ lang: 'zh-CN', setLang: () => {}, t: forcedZhT }}>
+      <div className="min-h-screen bg-slate-50 pb-24 font-sans">
       <div className="pt-8 px-4 sm:px-6 max-w-2xl mx-auto space-y-4">
 
         {/* Header */}
@@ -120,9 +122,8 @@ export default function App() {
               <p className="text-slate-400 text-sm mt-0.5 max-w-[200px] truncate">{session.user.email}</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            <LanguageSwitcher />
-            <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-slate-600 bg-white rounded-full shadow-sm border border-slate-100 transition-colors">
+          <div className="flex items-center gap-3">
+            <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-slate-500 bg-white hover:bg-slate-100 rounded-full shadow-sm border border-slate-100 transition-colors">
               <LogOut size={16} />
             </button>
           </div>
@@ -209,7 +210,8 @@ export default function App() {
         onDeleted={handleDeleted}
         user={session.user}
       />
-      <ShareModal isOpen={shareModal.open} onClose={() => setShareModal({ open: false, asset: null })} asset={shareModal.asset} />
-    </div>
+        <ShareModal isOpen={shareModal.open} onClose={() => setShareModal({ open: false, asset: null })} asset={shareModal.asset} />
+      </div>
+    </I18nContext.Provider>
   );
 }

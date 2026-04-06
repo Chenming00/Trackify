@@ -1,45 +1,43 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Globe } from 'lucide-react';
 import { useTranslation } from '../i18n';
 
 export default function LanguageSwitcher() {
   const { lang, setLang } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const ref = useRef(null);
+  const [hovered, setHovered] = useState(false);
 
-  useEffect(() => {
-    const clickOut = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-    };
-    document.addEventListener('mousedown', clickOut);
-    return () => document.removeEventListener('mousedown', clickOut);
-  }, []);
-
-  const d = {
-    'zh-CN': '简',
-    'zh-TW': '繁',
-    'en': 'EN',
-    'ja': '日'
-  };
+  const langs = [
+    { code: 'zh-CN', label: '中' },
+    { code: 'zh-TW', label: '繁' },
+    { code: 'en', label: 'EN' },
+    { code: 'ja', label: '日' },
+  ];
 
   return (
-    <div className="relative inline-block z-50 delay-75" ref={ref}>
-      <button 
-        onClick={() => setOpen(!open)}
-        className="flex items-center gap-1.5 text-slate-500 hover:text-slate-800 transition-colors p-2 rounded-xl bg-white/50 hover:bg-white shadow-sm border border-slate-100 backdrop-blur-sm"
-      >
+    <div 
+      className="relative flex items-center bg-white/60 backdrop-blur-xl border border-slate-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-full p-1.5 transition-all duration-500 ease-out z-50 cursor-default"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className={`flex items-center justify-center w-8 h-8 rounded-full text-slate-700 z-10 transition-all duration-300 ${!hovered ? 'bg-white shadow-sm' : 'bg-transparent shadow-none'}`}>
         <Globe size={16} />
-        <span className="text-[11px] font-bold uppercase">{d[lang]}</span>
-      </button>
+      </div>
 
-      {open && (
-        <div className="absolute right-0 mt-2 w-28 bg-white border border-slate-100 shadow-xl rounded-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-          <button onClick={() => { setLang('zh-CN'); setOpen(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 transition-colors ${lang === 'zh-CN' ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-50' : 'text-slate-600'}`}>简体中文</button>
-          <button onClick={() => { setLang('zh-TW'); setOpen(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 transition-colors ${lang === 'zh-TW' ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-50' : 'text-slate-600'}`}>繁體中文</button>
-          <button onClick={() => { setLang('en'); setOpen(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 transition-colors ${lang === 'en' ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-50' : 'text-slate-600'}`}>English</button>
-          <button onClick={() => { setLang('ja'); setOpen(false); }} className={`w-full text-left px-4 py-2.5 text-xs font-semibold hover:bg-slate-50 transition-colors ${lang === 'ja' ? 'text-emerald-600 bg-emerald-50 hover:bg-emerald-50' : 'text-slate-600'}`}>日本語</button>
-        </div>
-      )}
+      <div className={`flex items-center overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${hovered ? 'w-[140px] opacity-100 gap-1 pl-1 pr-0.5' : 'w-0 opacity-0 gap-0 pl-0 pr-0'}`}>
+        {langs.map(l => (
+          <button
+            key={l.code}
+            onClick={() => setLang(l.code)}
+            className={`min-w-[30px] h-[30px] rounded-full text-[13px] font-bold flex items-center justify-center transition-all duration-300 ${
+              lang === l.code 
+                ? 'bg-emerald-500 text-white shadow-md scale-100' 
+                : 'text-slate-500 hover:text-slate-900 hover:bg-white scale-95 hover:scale-100'
+            }`}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const dictionaries = {
+export const dictionaries = {
   'zh-CN': {
     title: 'Trackify · 资产追踪',
     subtitle: '追踪你的每一笔投入',
@@ -235,7 +235,7 @@ const dictionaries = {
   }
 };
 
-const I18nContext = createContext();
+export const I18nContext = createContext();
 
 export function I18nProvider({ children }) {
   // auto-detect system language or load from cache
