@@ -36,16 +36,11 @@ export default function App() {
   const totalValue = assets.reduce((sum, asset) => sum + Number(asset.price), 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 pb-20 font-sans">
+    <div className="min-h-screen bg-slate-50 pb-28 font-sans">
       <div className="pt-12 px-5 max-w-2xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
+        <div className="mb-6">
           <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
-          <button 
-            onClick={() => setIsModalOpen(true)}
-            className="bg-slate-800 text-white p-2.5 rounded-full hover:bg-slate-700 transition-transform active:scale-95 shadow-md"
-          >
-            <Plus size={24} />
-          </button>
+          <p className="text-slate-400 text-sm mt-1">追踪你的每一笔投入</p>
         </div>
 
         {/* Top Green Card */}
@@ -71,19 +66,22 @@ export default function App() {
         {/* Assets List */}
         <div className="mb-4">
           <h2 className="text-xl font-bold text-slate-800 mb-5 ml-1">资产列表</h2>
-          
+
           {isLoading ? (
-            <div className="flex justify-center py-16">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-500"></div>
+            <div className="flex flex-col items-center justify-center py-20 gap-3">
+              <div className="animate-spin rounded-full h-9 w-9 border-[3px] border-slate-200 border-b-emerald-500"></div>
+              <p className="text-slate-400 text-sm">加载中...</p>
             </div>
           ) : assets.length === 0 ? (
-            <div className="bg-white rounded-[1.5rem] border border-slate-200 border-dashed p-10 text-center shadow-sm">
-              <p className="text-slate-400 mb-4 font-medium">暂无添加任何资产</p>
-              <button 
+            <div className="bg-white rounded-[1.5rem] border-2 border-dashed border-slate-200 p-12 text-center">
+              <div className="text-5xl mb-4">📭</div>
+              <p className="text-slate-500 font-semibold mb-1">还没有任何资产</p>
+              <p className="text-slate-400 text-sm mb-6">点击右下角的按钮添加第一项</p>
+              <button
                 onClick={() => setIsModalOpen(true)}
-                className="bg-emerald-50 text-emerald-600 font-semibold px-6 py-2.5 rounded-full hover:bg-emerald-100 transition-colors"
+                className="bg-emerald-500 text-white font-semibold px-6 py-2.5 rounded-full hover:bg-emerald-600 transition-colors shadow-sm"
               >
-                添加第一项资产
+                立即添加
               </button>
             </div>
           ) : (
@@ -96,10 +94,19 @@ export default function App() {
         </div>
       </div>
 
-      <AddAssetModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onAssetAdded={handleAssetAdded} 
+      {/* Floating Action Button */}
+      <button
+        onClick={() => setIsModalOpen(true)}
+        className="fixed bottom-8 right-6 z-40 bg-slate-900 text-white w-14 h-14 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.25)] hover:bg-slate-700 active:scale-95 transition-all flex items-center justify-center"
+        aria-label="添加资产"
+      >
+        <Plus size={26} />
+      </button>
+
+      <AddAssetModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onAssetAdded={handleAssetAdded}
       />
     </div>
   );
