@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../supabase';
 import { Loader2, Github } from 'lucide-react';
+import Logo from './Logo';
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(false);
@@ -26,10 +27,12 @@ export default function LandingPage() {
     <div className="min-h-screen bg-[#FAFAFA] text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
       
       {/* --- Section 1: Hero --- */}
+      <div className="absolute top-8 left-6 sm:left-10 flex items-center gap-2.5 z-20">
+        <Logo className="w-8 h-8 md:w-10 md:h-10" />
+        <span className="font-extrabold tracking-wide text-lg md:text-xl text-slate-800 uppercase">Trackify</span>
+      </div>
+
       <section className="relative min-h-[90vh] flex flex-col items-center justify-center px-6 pt-20 pb-12">
-        <div className="absolute top-12 font-bold tracking-widest text-xs text-slate-400 uppercase">
-          Trackify
-        </div>
 
         <div className="text-center max-w-2xl mx-auto z-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 fill-mode-both">
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight leading-tight text-slate-900 mb-6">

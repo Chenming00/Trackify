@@ -5,6 +5,7 @@ import AssetListItem from './components/AssetListItem';
 import AssetFormModal from './components/AssetFormModal';
 import ShareModal from './components/ShareModal';
 import LandingPage from './components/LandingPage';
+import Logo from './components/Logo';
 import { Plus, LayoutGrid, List, LogOut } from 'lucide-react';
 
 export default function App() {
@@ -109,9 +110,12 @@ export default function App() {
 
         {/* Header */}
         <div className="flex justify-between items-start">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
-            <p className="text-slate-400 text-sm mt-0.5 max-w-[200px] truncate">{session.user.email}</p>
+          <div className="flex items-center gap-3">
+            <Logo className="w-10 h-10 shadow-sm rounded-xl" />
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight">我的资产</h1>
+              <p className="text-slate-400 text-sm mt-0.5 max-w-[200px] truncate">{session.user.email}</p>
+            </div>
           </div>
           <button onClick={handleLogout} className="p-2 text-slate-400 hover:text-slate-600 bg-white rounded-full shadow-sm border border-slate-100 transition-colors" title="退出登录">
             <LogOut size={16} />
