@@ -7,8 +7,8 @@ export const dictionaries = {
 
     // Hero
     hero_eyebrow: '理性消费，从今天开始',
-    hero_title1: '买了多少？',
-    hero_title2: '每天花了多少？',
+    hero_title1: '你不是在花钱，',
+    hero_title2: '你是在每天亏钱',
     hero_desc: '大额消费从不是"一次性"的。Trackify 帮你把每笔支出换算成每日真实成本，让你的钱袋不再裸奔。',
     login_btn: '用 GitHub 免费登录',
     login_sub: '安全 · 免费 · 无需信用卡',
@@ -113,8 +113,8 @@ export const dictionaries = {
     subtitle: '追蹤你的每一筆投入',
 
     hero_eyebrow: '理性消費，從今天開始',
-    hero_title1: '買了多少？',
-    hero_title2: '每天花了多少？',
+    hero_title1: '你不是在花錢，',
+    hero_title2: '你是在每天虧錢',
     hero_desc: '大額消費從不是「一次性」的。Trackify 幫你把每筆支出換算成每日真實成本，讓你的荷包不再裸奔。',
     login_btn: '用 GitHub 免費登入',
     login_sub: '安全 · 免費 · 無需信用卡',
@@ -212,8 +212,8 @@ export const dictionaries = {
     subtitle: 'Track every investment',
 
     hero_eyebrow: 'Spend smarter. Live richer.',
-    hero_title1: 'What did you buy?',
-    hero_title2: 'What does it cost daily?',
+    hero_title1: "You aren't just spending,",
+    hero_title2: "You're losing money daily.",
     hero_desc: "Big purchases aren't one-time costs — they drain you every single day. Trackify shows you the real price of everything you own.",
     login_btn: 'Continue with GitHub',
     login_sub: 'Free · Secure · No credit card',
@@ -311,8 +311,8 @@ export const dictionaries = {
     subtitle: 'すべての投資を追跡する',
 
     hero_eyebrow: '賢く使い、豊かに生きる',
-    hero_title1: '何を買いましたか？',
-    hero_title2: '毎日いくらかかっていますか？',
+    hero_title1: 'ただお金を使っているのではない、',
+    hero_title2: '毎日お金を失っているのだ',
     hero_desc: '大きな買い物は「一度きり」のコストではありません。Trackify は購入価格を毎日の実コストに換算し、お金の流れを可視化します。',
     login_btn: 'GitHubで無料登録',
     login_sub: '無料 · 安全 · クレジットカード不要',

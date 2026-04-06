@@ -89,10 +89,7 @@ export default function LandingPage() {
     desc: t(`feat${n}_desc`),
   }));
 
-  const testimonials = [1, 2, 3].map((n) => ({
-    text: t(`testi${n}_text`),
-    name: t(`testi${n}_name`),
-  }));
+
 
   return (
     <div className="min-h-screen bg-[#F7F8FA] text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
@@ -316,33 +313,6 @@ export default function LandingPage() {
                 </div>
                 <h3 className="text-lg font-bold text-slate-800 mb-2">{f.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════
-          TESTIMONIALS
-      ════════════════════════════════════════ */}
-      <section className="py-24 px-5 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-[0.2em] mb-12">
-            {t('testi_eyebrow')}
-          </p>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {testimonials.map((t2, i) => (
-              <div
-                key={i}
-                className="bg-slate-50 rounded-3xl p-6 border border-slate-100 flex flex-col gap-5 hover:border-emerald-200 hover:bg-emerald-50/30 transition-colors duration-300"
-              >
-                {/* Stars */}
-                <div className="flex gap-0.5 text-amber-400 text-sm" aria-label="5 stars">
-                  {'★★★★★'.split('').map((s, j) => <span key={j}>{s}</span>)}
-                </div>
-                <p className="text-slate-600 text-sm leading-relaxed flex-1">{t2.text}</p>
-                <p className="text-slate-400 text-xs font-semibold">{t2.name}</p>
               </div>
             ))}
           </div>
