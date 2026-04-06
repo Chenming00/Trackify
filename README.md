@@ -1,25 +1,26 @@
 # Trackify · 资产追踪
 
 一款精致的个人资产管理 Web App，帮助你记录每一笔投入，并实时计算「每日成本」。
-支持社交分享卡片生成，让你把使用性价比分享到朋友圈和小红书。
+支持紧凑列表 / 卡片双视图切换，社交分享卡片一键生成。
 
 ## ✨ 功能亮点
 
 | 功能 | 说明 |
 |------|------|
-| **资产总值概览** | 顶部绿色卡片实时统计全部资产价值 |
-| **每日成本计算** | 自动折算 `购入价格 ÷ 使用天数`，一眼看清性价比 |
-| **新增 / 编辑 / 删除** | 完整 CRUD，底部弹出 iOS Sheet 风格表单 |
-| **资产状态管理** | 使用中 · 闲置中 · 已卖出，iOS 分段控件切换 |
-| **社交分享卡片** | 一键生成精美 PNG 图片，可直接下载分享 |
-| **移动端优先** | 纵向卡片布局、响应式双列、触控友好 |
+| **资产总值概览** | 顶部绿色卡片实时统计 |
+| **每日成本计算** | `购入价格 ÷ 使用天数`，一眼看清性价比 |
+| **双视图切换** | 紧凑列表（高密度）/ 卡片模式（展示型） |
+| **状态分组** | 使用中 · 闲置中 · 已卖出，折叠展开 |
+| **完整 CRUD** | 新增 / 编辑 / 删除，iOS Sheet 风格弹窗 |
+| **社交分享** | html2canvas 生成 PNG，下载即分享 |
+| **移动端优先** | 紧凑布局，一屏 5+ 条资产 |
 
 ## 🛠 技术栈
 
 - **前端**：React 18 + Vite
-- **样式**：Tailwind CSS v3 + Lucide React 图标
+- **样式**：Tailwind CSS v3 + Lucide React
 - **后端**：Supabase（PostgreSQL + REST API）
-- **分享**：html2canvas 截图生成
+- **分享**：html2canvas
 - **部署**：Vercel
 
 ## 📁 项目结构
@@ -28,11 +29,12 @@
 src/
 ├── supabase.js                  # Supabase client
 ├── main.jsx                     # 入口
-├── App.jsx                      # 主页（状态管理 + 布局）
+├── App.jsx                      # 主页（视图切换 + 状态分组）
 └── components/
-    ├── AssetCard.jsx             # 资产卡片（纵向布局 + 每日成本）
-    ├── AssetFormModal.jsx        # 新增 / 编辑弹窗（iOS Sheet）
-    ├── ShareCard.jsx             # 分享卡片 DOM（html2canvas 目标）
+    ├── AssetCard.jsx             # 卡片模式
+    ├── AssetListItem.jsx         # 紧凑列表模式
+    ├── AssetFormModal.jsx        # 新增 / 编辑弹窗
+    ├── ShareCard.jsx             # 分享卡片 DOM
     └── ShareModal.jsx            # 分享预览 + 下载
 ```
 
@@ -76,23 +78,20 @@ VITE_SUPABASE_ANON_KEY=你的AnonKey
 npm run dev
 ```
 
-访问 `http://localhost:5173`
-
 ## 📦 部署到 Vercel
 
 ```bash
 git push -u origin main
 ```
 
-1. 进入 [Vercel](https://vercel.com/) → **Add New → Project** → 导入此仓库
-2. 在 **Environment Variables** 中填入 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`
-3. 点击 **Deploy**，完成 🎉
+1. [Vercel](https://vercel.com/) → **Add New → Project** → 导入仓库
+2. **Environment Variables** 填入 `VITE_SUPABASE_URL` 和 `VITE_SUPABASE_ANON_KEY`
+3. **Deploy** 🎉
 
 ## 📝 版本历史
 
-| 版本 | 更新内容 |
-|------|---------|
-| V1 | 基础资产列表 + Supabase 连接 |
-| V2 | 浮动添加按钮、使用天数显示、移动端响应式 |
-| V3 | 资产编辑 / 删除、状态管理、社交分享卡片 |
-| V3.0.1 | 移动端 UI 重构：纵向卡片、iOS Sheet 弹窗、分段状态控件 |
+| 版本 | 内容 |
+|------|------|
+| v0.0.1 | 基础资产列表、Supabase 连接、新增资产、每日成本计算、移动端响应式 |
+| v0.0.2 | 资产编辑 / 删除、状态管理、社交分享卡片、iOS Sheet 弹窗、纵向卡片布局 |
+| v0.0.3 | 紧凑列表模式、视图切换（列表/卡片）、状态分组折叠、信息密度优化 |
