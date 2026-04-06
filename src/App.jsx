@@ -4,7 +4,7 @@ import AssetCard from './components/AssetCard';
 import AssetListItem from './components/AssetListItem';
 import AssetFormModal from './components/AssetFormModal';
 import ShareModal from './components/ShareModal';
-import Auth from './components/Auth';
+import LandingPage from './components/LandingPage';
 import { Plus, LayoutGrid, List, LogOut } from 'lucide-react';
 
 export default function App() {
@@ -66,7 +66,7 @@ export default function App() {
   };
 
   if (!session) {
-    return <Auth />;
+    return <LandingPage />;
   }
 
   const totalValue = assets.reduce((sum, a) => sum + Number(a.price), 0);
