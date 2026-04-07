@@ -13,7 +13,7 @@ export default function AssetCard({ asset, onEdit, onShare }) {
   const { name, price, start_date, image_url, status } = asset;
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
-  const costPerDay = Math.round(price / days);
+  const costPerDay = (price / days).toFixed(2);
   const s = STATUS_STYLE[status] || STATUS_STYLE.using;
 
   return (

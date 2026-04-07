@@ -9,7 +9,7 @@ const ShareCard = forwardRef(function ShareCard({ asset, blobUrl }, ref) {
   const { name, price, start_date, image_url, status } = asset;
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
-  const costPerDay = Math.round(price / days);
+  const costPerDay = (price / days).toFixed(2);
   const totalFormatted = Number(price).toLocaleString();
   const statusLabel = { using: '使用中', retired: '闲置中', sold: '已卖出' }[status] || '使用中';
   const statusColor = { using: '#10b981', retired: '#94a3b8', sold: '#f87171' }[status] || '#10b981';
