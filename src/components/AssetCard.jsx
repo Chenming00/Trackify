@@ -5,7 +5,7 @@ import { useTranslation } from '../i18n';
 const STATUS_STYLE = {
   using:   { label: '使用中', bg: 'bg-emerald-100', text: 'text-emerald-700' },
   retired: { label: '闲置中', bg: 'bg-slate-100',   text: 'text-slate-500'  },
-  sold:    { label: '已卖出', bg: 'bg-red-100',      text: 'text-red-500'    },
+  sold:    { label: '已卖出', bg: 'bg-red-50',       text: 'text-red-500'    },
 };
 
 export default function AssetCard({ asset, onEdit, onShare }) {
@@ -17,42 +17,67 @@ export default function AssetCard({ asset, onEdit, onShare }) {
   const s = STATUS_STYLE[status] || STATUS_STYLE.using;
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100/80 overflow-hidden">
-      {/* Image — reduced height */}
-      <div className="relative">
-        {image_url ? (
-          <img src={image_url} alt={name} className="w-full h-24 object-cover" />
-        ) : (
-          <div className="w-full h-20 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center">
-            <span className="text-3xl">📦</span>
-          </div>
-        )}
-        {/* Action icons overlay */}
-        <div className="absolute top-1.5 right-1.5 flex gap-1">
-          <button onClick={(e) => { e.stopPropagation(); onShare(asset); }} className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-emerald-500 transition-colors">
+    <div
+      className="bg-white rounded-2xl shadow-sm border border-slate-100/80 overflow-hidden hover:shadow-md hover:border-slate-200 active:scale-[0.98] transition-all duration-200 cursor-pointer"
+      onClick={() => onEdit(asset)}
+    >
+      {/* Image — 16:9 aspect ratio, background-image for no distortion */}
+      <div className="relative w-full" style={{ aspectRatio: '16/9' }}>
+        <div
+          className="absolute inset-0"
+          style={
+            image_url
+              ? {
+                  backgroundImage: `url(${image_url})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                }
+              : { background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)' }
+          }
+        >
+          {!image_url && (
+            <div className="w-full h-full flex items-center justify-center text-4xl">📦</div>
+          )}
+        </div>
+        {/* Action buttons overlay */}
+        <div className="absolute top-2 right-2 flex gap-1.5 z-10">
+          <button
+            onClick={(e) => { e.stopPropagation(); onShare(asset); }}
+            className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-emerald-500 shadow-sm transition-colors"
+            title="分享"
+          >
             <Share2 size={12} />
           </button>
-          <button onClick={(e) => { e.stopPropagation(); onEdit(asset); }} className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-slate-700 transition-colors">
+          <button
+            onClick={(e) => { e.stopPropagation(); onEdit(asset); }}
+            className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-slate-700 shadow-sm transition-colors"
+            title="编辑"
+          >
             <MoreHorizontal size={12} />
           </button>
         </div>
       </div>
 
-      {/* Content — compressed */}
-      <div className="p-3 space-y-1.5 flex flex-col items-center text-center">
+      {/* Content */}
+      <div className="p-3 sm:p-4">
         {/* Name + Status */}
-        <div className="flex justify-between items-center w-full gap-1 mb-1">
-          <h3 className="font-bold text-sm text-slate-800 truncate flex-1 text-left">{name}</h3>
-          <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 ${s.bg} ${s.text}`}>{s.label}</span>
+        <div className="flex items-start justify-between gap-1 mb-2">
+          <h3 className="font-bold text-sm sm:text-[15px] text-slate-800 leading-snug line-clamp-2 flex-1">{name}</h3>
+          <span className={`text-[9px] font-semibold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5 ${s.bg} ${s.text}`}>
+            {s.label}
+          </span>
         </div>
 
-        {/* Cost per day — hero, visual center */}
-        <div className="flex items-baseline justify-center gap-1 mt-1">
-          <span className="text-3xl font-black tracking-tight text-slate-800">¥{costPerDay}</span>
+        {/* Cost hero */}
+        <div className="flex items-baseline gap-1 mb-1">
+          <span className="text-2xl sm:text-3xl font-black tracking-tight text-slate-800 leading-none">
+            ¥{costPerDay}
+          </span>
           <span className="text-xs font-medium text-slate-400">{t('per_day')}</span>
         </div>
 
-        {/* Price · Days — auxiliary info */}
+        {/* Auxiliary info */}
         <p className="text-[11px] text-slate-400">
           ¥{Number(price).toLocaleString()} · {days}{t('days')}
         </p>
