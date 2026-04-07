@@ -76,10 +76,12 @@ const ShareCard = forwardRef(function ShareCard({ asset, blobUrl }, ref) {
           </h2>
           <div style={{
             flexShrink: 0,
+            display: 'inline-flex', alignItems: 'center',
             background: sc.bg, border: `1px solid ${sc.border}`,
             borderRadius: '20px', padding: '4px 10px', marginTop: '2px',
+            whiteSpace: 'nowrap',
           }}>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: sc.text, letterSpacing: '0.02em' }}>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: sc.text, letterSpacing: '0.02em', lineHeight: 1 }}>
               {sc.label}
             </span>
           </div>
