@@ -43,11 +43,37 @@ function AppContent() {
 
   useEffect(() => {
     if (session) {
-      // 登录后强制锁定为中文 (Requested by user)
       setLang('zh-CN');
       fetchAssets();
+
+      // Subscribe to real-time changes
+      const channel = supabase
+        .channel('db-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: '*',
+            schema: 'public',
+            table: 'assets',
+            filter: `user_id=eq.${session.user.id}`
+          },
+          (payload) => {
+            if (payload.eventType === 'INSERT') {
+              setAssets((prev) => [payload.new, ...prev]);
+            } else if (payload.eventType === 'UPDATE') {
+              setAssets((prev) => prev.map((a) => (a.id === payload.new.id ? payload.new : a)));
+            } else if (payload.eventType === 'DELETE') {
+              setAssets((prev) => prev.filter((a) => a.id !== payload.old.id));
+            }
+          }
+        )
+        .subscribe();
+
+      return () => {
+        supabase.removeChannel(channel);
+      };
     } else {
-      setAssets([]); // Clear assets on logout
+      setAssets([]);
     }
   }, [session, setLang]);
 
@@ -70,17 +96,17 @@ function AppContent() {
   };
 
   const handleSaved = (savedAsset, mode) => {
+    // The state is now handled by the real-time subscription! 
+    // We just show a toast for immediate feedback.
     if (mode === 'insert') {
-      setAssets((prev) => [savedAsset, ...prev]);
       toast.success('资产添加成功');
     } else {
-      setAssets((prev) => prev.map((a) => (a.id === savedAsset.id ? savedAsset : a)));
       toast.success('修改已保存');
     }
   };
 
   const handleDeleted = (id) => {
-    setAssets((prev) => prev.filter((a) => a.id !== id));
+    // The state is now handled by the real-time subscription!
     toast.success('已删除资产');
   };
 
