@@ -33,12 +33,15 @@ const ShareCard = forwardRef(function ShareCard({ asset, blobUrl }, ref) {
       {/* Top image area with overlay */}
       <div style={{ width: '100%', height: '220px', position: 'relative', overflow: 'hidden' }}>
         {imgSrc ? (
-          <img
-            src={imgSrc}
-            alt={name}
-            crossOrigin="anonymous"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
+          /* Use background-image instead of <img> — html2canvas doesn't support object-fit:cover,
+             which would cause stretching. background-size:cover is handled correctly. */
+          <div style={{
+            width: '100%', height: '100%',
+            backgroundImage: `url(${imgSrc})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }} />
         ) : (
           <div style={{
             width: '100%', height: '100%',
