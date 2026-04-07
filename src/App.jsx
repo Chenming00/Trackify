@@ -112,21 +112,6 @@ function AppContent() {
     return sum + (a.price / days);
   }, 0);
 
-  // Sorting
-  const sortAssets = (arr) => {
-    return [...arr].sort((a, b) => {
-      const aDays = Math.max(1, Math.floor((Date.now() - new Date(a.start_date)) / 86400000));
-      const bDays = Math.max(1, Math.floor((Date.now() - new Date(b.start_date)) / 86400000));
-      const aCost = Number(a.price) / aDays;
-      const bCost = Number(b.price) / bDays;
-
-      if (sortBy === 'cost_desc') return bCost - aCost;
-      if (sortBy === 'price_desc') return Number(b.price) - Number(a.price);
-      // default: date_desc
-      return new Date(b.start_date).getTime() - new Date(a.start_date).getTime();
-    });
-  };
-
   const renderAsset = (asset) =>
     viewMode === 'list' ? (
       <AssetListItem key={asset.id} asset={asset} onEdit={(a) => setFormModal({ open: true, asset: a })} onShare={(a) => setShareModal({ open: true, asset: a })} />
@@ -141,7 +126,6 @@ function AppContent() {
   const renderGroup = (title, items) => {
     if (items.length === 0) return null;
     const isOpen = openGroups[title];
-    const sortedItems = sortAssets(items);
 
     return (
       <div className="group mb-5">
@@ -159,11 +143,11 @@ function AppContent() {
           <div className="overflow-hidden">
             {viewMode === 'list' ? (
               <div className="space-y-2 pb-1">
-                {sortedItems.map(renderAsset)}
+                {items.map(renderAsset)}
               </div>
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 pb-1">
-                {sortedItems.map(renderAsset)}
+                {items.map(renderAsset)}
               </div>
             )}
           </div>
@@ -221,37 +205,9 @@ function AppContent() {
           </div>
         </div>
 
-        {/* List controls: Sort & View Toggle */}
-        <div className="flex items-center justify-between mt-6">
-          {/* Sorting */}
+        {/* View Toggle */}
+        <div className="flex items-center justify-end mt-6">
           <div className="flex bg-slate-100 rounded-lg p-0.5 gap-0.5">
-            <button
-              onClick={() => setSortBy('date_desc')}
-              className={`flex items-center gap-1.5 p-1.5 px-2.5 rounded-md transition-all text-xs font-semibold ${sortBy === 'date_desc' ? 'bg-white shadow-sm text-slate-700' : 'text-slate-400'}`}
-            >
-              <Clock size={13} />
-              <span className="hidden sm:inline">最新</span>
-            </button>
-            <button
-              onClick={() => setSortBy('cost_desc')}
-              className={`flex items-center gap-1.5 p-1.5 px-2.5 rounded-md transition-all text-xs font-semibold ${sortBy === 'cost_desc' ? 'bg-white shadow-sm text-slate-700' : 'text-slate-400'}`}
-            >
-              <ArrowDownUp size={13} />
-              <span className="hidden sm:inline">降序</span>
-              <span>成本</span>
-            </button>
-            <button
-              onClick={() => setSortBy('price_desc')}
-              className={`flex items-center gap-1.5 p-1.5 px-2.5 rounded-md transition-all text-xs font-semibold ${sortBy === 'price_desc' ? 'bg-white shadow-sm text-slate-700' : 'text-slate-400'}`}
-            >
-              <Tag size={13} />
-              <span className="hidden sm:inline">降序</span>
-              <span>总价</span>
-            </button>
-          </div>
-
-          {/* View Toggle */}
-          <div className="flex bg-slate-100 rounded-lg p-0.5 gap-0.5 ml-auto">
             <button
               onClick={() => setViewMode('list')}
               className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white shadow-sm text-slate-700' : 'text-slate-400'}`}

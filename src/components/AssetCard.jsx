@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import { Share2, MoreHorizontal, TrendingDown } from 'lucide-react';
+import React from 'react';
+import { Share2, MoreHorizontal } from 'lucide-react';
 import { useTranslation } from '../i18n';
-import CostTrendChart from './CostTrendChart';
 
 const STATUS_STYLE = {
   using:   { label: '使用中', bg: 'bg-emerald-100', text: 'text-emerald-700' },
@@ -11,7 +10,6 @@ const STATUS_STYLE = {
 
 export default function AssetCard({ asset, onEdit, onShare }) {
   const { t } = useTranslation();
-  const [showChart, setShowChart] = useState(false);
   const { name, price, start_date, image_url, status } = asset;
 
   const days = Math.max(1, Math.floor((Date.now() - new Date(start_date)) / 86400000));
@@ -44,13 +42,6 @@ export default function AssetCard({ asset, onEdit, onShare }) {
         </div>
         {/* Action buttons overlay */}
         <div className="absolute top-2 right-2 flex gap-1.5 z-10">
-          <button
-            onClick={(e) => { e.stopPropagation(); setShowChart(!showChart); }}
-            className={`p-1.5 ${showChart ? 'bg-indigo-50 text-indigo-600' : 'bg-white/80 text-slate-500'} backdrop-blur-sm rounded-full hover:text-indigo-600 shadow-sm transition-colors`}
-            title="查看走势"
-          >
-            <TrendingDown size={12} />
-          </button>
           <button
             onClick={(e) => { e.stopPropagation(); onShare(asset); }}
             className="p-1.5 bg-white/80 backdrop-blur-sm rounded-full text-slate-500 hover:text-emerald-500 shadow-sm transition-colors"
@@ -90,17 +81,6 @@ export default function AssetCard({ asset, onEdit, onShare }) {
         <p className="text-[11px] text-slate-400">
           ¥{Number(price).toLocaleString()} · {days}{t('days')}
         </p>
-      </div>
-
-      {/* Chart Section */}
-      <div 
-        className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${showChart ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}
-      >
-        <div className="overflow-hidden">
-          <div className="bg-slate-50/50 border-t border-slate-100/60 p-4 pt-3" onClick={(e) => e.stopPropagation()}>
-            <CostTrendChart price={Number(price)} startDate={start_date} compact={true} />
-          </div>
-        </div>
       </div>
     </div>
   );

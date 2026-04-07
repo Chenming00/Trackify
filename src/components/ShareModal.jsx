@@ -123,18 +123,18 @@ export default function ShareModal({ isOpen, onClose, asset }) {
 
         {/* Preview area */}
         <div className="px-5 pb-3">
-          <div className="relative bg-slate-950 rounded-2xl overflow-hidden flex items-center justify-center min-h-[220px]">
+          <div className="relative bg-slate-100/80 rounded-2xl overflow-hidden flex items-center justify-center min-h-[220px] shadow-inner border border-slate-200/60 p-2">
             {previewUrl ? (
-              <img src={previewUrl} alt="share preview" className="w-full rounded-2xl block" />
+              <img src={previewUrl} alt="share preview" className="w-full rounded-[14px] shadow-sm block" />
             ) : (
-              /* Dark skeleton while generating */
-              <div className="w-full aspect-[390/560] bg-gradient-to-b from-slate-900 to-slate-800 rounded-2xl animate-pulse" />
+              /* Light skeleton while generating */
+              <div className="w-full aspect-[390/560] bg-gradient-to-b from-slate-200 to-slate-100 rounded-[14px] animate-pulse" />
             )}
             {/* Loading overlay */}
             {isGenerating && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 rounded-2xl">
-                <Loader2 size={28} className="animate-spin text-white mb-2" />
-                <span className="text-white text-xs font-medium">{t('generating')}</span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/70 backdrop-blur-sm rounded-2xl">
+                <Loader2 size={28} className="animate-spin text-emerald-500 mb-2" />
+                <span className="text-slate-600 text-[13px] font-semibold">{t('generating')}</span>
               </div>
             )}
           </div>
